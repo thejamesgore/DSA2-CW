@@ -38,6 +38,7 @@ def main():
     print("")
     method = get_valid_input("Type your choice (1) or (2): ")
     
-    show_chessboard()
+    moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)]
+    show_chessboard(moves)
     
 main()
