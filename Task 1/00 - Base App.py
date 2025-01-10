@@ -1,3 +1,10 @@
+"""
+    Knights Tour Visualiser
+
+    This is the solution to Task 1 and main program which takes 
+    the user input and decides what functions shall be called
+    to provide the relevant solutions
+"""
 def main():
 
     # This is a helper function that ensures a user always enters a 1 or a 2 otherwise program will error out 
