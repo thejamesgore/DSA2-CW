@@ -38,4 +38,6 @@ def main():
     print("")
     method = get_valid_input("Type your choice (1) or (2): ")
     
+    show_chessboard()
+    
 main()
