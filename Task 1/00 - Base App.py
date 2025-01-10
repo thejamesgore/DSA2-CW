@@ -5,6 +5,9 @@
     the user input and decides what functions shall be called
     to provide the relevant solutions
 """
+
+from chessboard import show_chessboard
+
 def main():
 
     # This is a helper function that ensures a user always enters a 1 or a 2 otherwise program will error out 
