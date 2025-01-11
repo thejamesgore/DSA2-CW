@@ -7,6 +7,7 @@
 """
 
 from chessboard import show_chessboard
+from las_vegas import las_vegas
 
 def main():
 
@@ -37,6 +38,33 @@ def main():
     print("(1) Backtracking method OR (2) Las Vegas method")
     print("")
     method = get_valid_input("Type your choice (1) or (2): ")
+
+    tour_run = ""
+    
+    if method == "1":
+        print("Lets try the Backtracking approach.")
+        if tour_type == "1":
+            print("With an Open Tour.")
+            print("")
+            print("Visualising board...")
+        else:
+            print("With a Closed Tour.")
+            print("")
+            print("Visualising board...")
+        tour_run = backtracking
+        
+    
+    if method == "2":
+        print("Lets try the Las Vegas approach. Visualising board....")
+        if tour_type == "1":
+            print("With an Open Tour.")
+            print("")
+            print("Visualising board...")
+        else:
+            print("With a Closed Tour.")
+            print("")
+            print("Visualising board...")
+        tour_run = las_vegas
     
     moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)]
     show_chessboard(moves)
