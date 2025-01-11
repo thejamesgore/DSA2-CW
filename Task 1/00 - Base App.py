@@ -68,6 +68,9 @@ def main():
         tour_run = las_vegas(tour_type)
     
     # moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)] - Test moves to see if you an visualise on the board
-    show_chessboard(tour_run)
+    if not tour_run:  # Check if tour_run is empty
+        print("No valid tour was found. Cannot visualize the chessboard.")
+    else:
+        show_chessboard(tour_run)
     
 main()
