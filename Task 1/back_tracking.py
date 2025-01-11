@@ -25,7 +25,6 @@ def back_tracking(tour_type):
     
     # We need a way to make sure the knight can't go outside of our board
     # We can get board dimensions and ensure the tuples for the moves are within those bounds
-    # This may mean also tracking where the knight is on a 2D array of the board
     def is_possible_move(x,y):
         if 0 <= x < 8 and 0 <= y < 8:
             return True
@@ -37,3 +36,10 @@ def back_tracking(tour_type):
     chessboard[::2, ::2] = 1  
     chessboard[1::2, 1::2] = 1 
 
+    # We do the next move helper function
+    def next_move(x,y):
+        path.append((x,y)) # We add the move to the path we've taken so we can return it to our visualiser
+        chessboard[x,y] = True # For the square visited we change it to True to indicate we've landed there
+        
+        
+    # Next need to work out how to do the moves
