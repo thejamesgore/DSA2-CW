@@ -48,11 +48,11 @@ def main():
             print("With an Open Tour.")
             print("")
             print("Visualising board...")
-        else:
+        elif tour_type == "2":
             print("With a Closed Tour.")
             print("")
             print("Visualising board...")
-        tour_run = back_tracking()
+        tour_run = back_tracking(tour_type)
         
     
     if method == "2":
@@ -61,13 +61,13 @@ def main():
             print("With an Open Tour.")
             print("")
             print("Visualising board...")
-        else:
+        elif tour_type == "2":
             print("With a Closed Tour.")
             print("")
             print("Visualising board...")
-        tour_run = las_vegas()
+        tour_run = las_vegas(tour_type)
     
-    moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)]
-    show_chessboard(moves)
+    # moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)] - Test moves to see if you an visualise on the board
+    show_chessboard(tour_run)
     
 main()
