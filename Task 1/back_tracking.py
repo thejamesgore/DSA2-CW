@@ -41,5 +41,20 @@ def back_tracking(tour_type):
         path.append((x,y)) # We add the move to the path we've taken so we can return it to our visualiser
         chessboard[x,y] = True # For the square visited we change it to True to indicate we've landed there
         
+        # Next we work out from where we are on the board what moves are even available to us in this moment.
+        available_moves = []
         
-    # Next need to work out how to do the moves
+        for dx, dy in knight_moves:
+            next_x, next_y = x + dx, y + dy # from current position we add the next potential move dimensions   
+            if is_possible_move(next_x, next_y) and not chessboard[next_x, next_y]:
+                available_moves.append((next_x, next_y))  # Add valid unvisited moves to the list
+        
+        # Debugging to see if this actually works
+        # print(f"Current position: ({x}, {y})")
+        # print(f"Path so far: {path}")
+        # print(f"Available moves: {available_moves}")
+        
+        # Return the list of valid moves
+        return available_moves
+    
+    
