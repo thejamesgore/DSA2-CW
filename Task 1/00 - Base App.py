@@ -8,6 +8,7 @@
 
 from chessboard import show_chessboard
 from las_vegas import las_vegas
+from back_tracking import back_tracking
 
 def main():
 
@@ -51,7 +52,7 @@ def main():
             print("With a Closed Tour.")
             print("")
             print("Visualising board...")
-        tour_run = backtracking
+        tour_run = back_tracking()
         
     
     if method == "2":
@@ -64,7 +65,7 @@ def main():
             print("With a Closed Tour.")
             print("")
             print("Visualising board...")
-        tour_run = las_vegas
+        tour_run = las_vegas()
     
     moves = [(0, 0), (2, 1), (4, 2), (6, 3), (5, 5), (3, 6), (1, 7)]
     show_chessboard(moves)
