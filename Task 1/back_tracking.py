@@ -38,6 +38,18 @@ def back_tracking(tour_type):
         else:
             return False
     
+    # Added this to help see what's happening on the board
+    # V means we've visited that square, . means we haven't
+    def print_board_state():
+        for i in range(8):
+            for j in range(8):
+                if visited[i][j]:
+                    print('V', end=' ')
+                else:
+                    print('.', end=' ')
+            print()  # New line after each row
+        print()  # Extra line after board
+    
     # This helps us pick moves that are less likely to lead to dead ends
     def count_possible_moves(x, y):
         count = 0
@@ -57,6 +69,8 @@ def back_tracking(tour_type):
             elapsed = time.time() - start_time
             print(f"\nAttempts so far: {attempts}, Time: {elapsed:.2f}s")
             print(f"Currently at: ({current_x}, {current_y}), Move: {move_count}")
+            print("Current board state:")
+            print_board_state()
         
         # Add this position to our path and mark it as visited
         path.append((current_x, current_y))
@@ -108,16 +122,23 @@ def back_tracking(tour_type):
         attempts_before = attempts  # Track attempts for this starting position
         
         print(f"\nTrying start position ({start_x}, {start_y})")
+        print("Initial board state:")
+        print_board_state()
+        
         if find_tour(start_x, start_y, 0):
             elapsed = time.time() - start_time
             print(f"Solution found starting from ({start_x}, {start_y})")
             print(f"Total attempts: {attempts}")
             print(f"Time taken: {elapsed:.2f} seconds")
+            print("Final board state:")
+            print_board_state()
             return path
         
         # Show attempts made from this starting position
         attempts_made = attempts - attempts_before
         print(f"No solution from ({start_x}, {start_y}) after {attempts_made} attempts")
+        print("Failed board state:")
+        print_board_state()
     
     print(f"\nNo solution found after {attempts} total attempts")
     print(f"Time elapsed: {time.time() - start_time:.2f} seconds")
