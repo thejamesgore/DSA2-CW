@@ -30,6 +30,9 @@ def back_tracking(tour_type):
     attempts = 0
     start_time = time.time()
     
+    # Let's not get stuck forever on one starting point
+    MAX_ATTEMPTS = 10000000  # 10 million seems like enough
+    
     # We need a way to make sure the knight can't go outside of our board
     # We can get board dimensions and ensure the tuples for the moves are within those bounds
     def is_possible_move(x, y):
@@ -60,9 +63,13 @@ def back_tracking(tour_type):
         return count
     
     # Our recursive function that tries to find a valid tour
-    def find_tour(current_x, current_y, move_count):
+    def find_tour(current_x, current_y, move_count, attempt_start):
         nonlocal attempts
         attempts += 1
+        
+        # Better give up on this starting point if we've tried too many times
+        if attempts - attempt_start >= MAX_ATTEMPTS:
+            return False
         
         # Print progress every million attempts
         if attempts % 1000000 == 0:
@@ -102,7 +109,7 @@ def back_tracking(tour_type):
         
         # Try each possible move
         for _, next_x, next_y in possible_moves:
-            if find_tour(next_x, next_y, move_count + 1):
+            if find_tour(next_x, next_y, move_count + 1, attempt_start):
                 return True
         
         # If no moves worked, backtrack
@@ -110,22 +117,25 @@ def back_tracking(tour_type):
         path.pop()
         return False
     
-    # Try from corner positions first as they're often good starting points
-    start_positions = [(0, 0), (0, 7), (7, 0), (7, 7)]
-    start_positions.extend((x, y) for x in range(8) for y in range(8) 
-                         if (x, y) not in start_positions)
+    # For closed tours the middle squares work way better - found this after lots of testing
+    # For open tours the corners are still fine
+    if tour_type == "Closed":
+        start_positions = [(3, 3), (4, 4), (3, 4), (4, 3)]  # Middle squares first
+        start_positions.extend([(0, 0), (0, 7), (7, 0), (7, 7)])  # Then corners if needed
+    else:
+        start_positions = [(0, 0), (0, 7), (7, 0), (7, 7)]
     
     for start_x, start_y in start_positions:
         # Reset for new attempt
         path.clear()
         visited.fill(False)
-        attempts_before = attempts  # Track attempts for this starting position
+        attempt_start = attempts  # Track attempts for this starting position
         
         print(f"\nTrying start position ({start_x}, {start_y})")
         print("Initial board state:")
         print_board_state()
         
-        if find_tour(start_x, start_y, 0):
+        if find_tour(start_x, start_y, 0, attempt_start):
             elapsed = time.time() - start_time
             print(f"Solution found starting from ({start_x}, {start_y})")
             print(f"Total attempts: {attempts}")
@@ -135,8 +145,10 @@ def back_tracking(tour_type):
             return path
         
         # Show attempts made from this starting position
-        attempts_made = attempts - attempts_before
+        attempts_made = attempts - attempt_start
         print(f"No solution from ({start_x}, {start_y}) after {attempts_made} attempts")
+        if attempts_made >= MAX_ATTEMPTS:
+            print("That's enough tries from here - let's try somewhere else")
         print("Failed board state:")
         print_board_state()
     
