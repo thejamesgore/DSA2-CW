@@ -1,4 +1,5 @@
 import numpy as np
+import time  # Need this to track how long we're taking
 
 def back_tracking(tour_type):
     """
@@ -25,6 +26,10 @@ def back_tracking(tour_type):
     # We need a separate board to track visited squares
     visited = np.zeros((8, 8), dtype=bool)
     
+    # Adding some counters to see what's happening
+    attempts = 0
+    start_time = time.time()
+    
     # We need a way to make sure the knight can't go outside of our board
     # We can get board dimensions and ensure the tuples for the moves are within those bounds
     def is_possible_move(x, y):
@@ -44,12 +49,18 @@ def back_tracking(tour_type):
     
     # Our recursive function that tries to find a valid tour
     def find_tour(current_x, current_y, move_count):
+        nonlocal attempts
+        attempts += 1
+        
+        # Print progress every million attempts
+        if attempts % 1000000 == 0:
+            elapsed = time.time() - start_time
+            print(f"\nAttempts so far: {attempts}, Time: {elapsed:.2f}s")
+            print(f"Currently at: ({current_x}, {current_y}), Move: {move_count}")
+        
         # Add this position to our path and mark it as visited
         path.append((current_x, current_y))
         visited[current_x, current_y] = True
-        
-        # Print for debugging
-        # print(f"Trying position ({current_x}, {current_y}), Move {move_count}")
         
         # If we've visited all squares
         if move_count == 63:  # 63 moves = all 64 squares visited (counting from 0)
@@ -94,11 +105,20 @@ def back_tracking(tour_type):
         # Reset for new attempt
         path.clear()
         visited.fill(False)
+        attempts_before = attempts  # Track attempts for this starting position
         
-        print(f"Trying start position ({start_x}, {start_y})")
+        print(f"\nTrying start position ({start_x}, {start_y})")
         if find_tour(start_x, start_y, 0):
+            elapsed = time.time() - start_time
             print(f"Solution found starting from ({start_x}, {start_y})")
+            print(f"Total attempts: {attempts}")
+            print(f"Time taken: {elapsed:.2f} seconds")
             return path
+        
+        # Show attempts made from this starting position
+        attempts_made = attempts - attempts_before
+        print(f"No solution from ({start_x}, {start_y}) after {attempts_made} attempts")
     
-    print("No solution found")
+    print(f"\nNo solution found after {attempts} total attempts")
+    print(f"Time elapsed: {time.time() - start_time:.2f} seconds")
     return None
