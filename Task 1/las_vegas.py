@@ -5,6 +5,7 @@ import time  # Need this to track how long we're taking
 def get_attempt_limit():
     while True:
         print("\nSelect number of attempts per starting position:")
+        print("1: 10,00 attempts - (extremely improbable to find a tour)")
         print("1: 100,000 attempts (low chance of success)")
         print("2: 1,000,000 attempts")
         print("3: 10,000,000 attempts (Could take quite some time...")
@@ -179,7 +180,7 @@ def las_vegas(tour_type):
             if (x, y) in corner_positions or (x, y) in center_positions:
                 continue
                 
-            if try_from_position(x, y):
+            if try_from_position(start_x, start_y):
                 return path
     
     print(f"\nNo solution found after trying all squares")
@@ -188,4 +189,20 @@ def las_vegas(tour_type):
     print(f"Time elapsed: {time.time() - start_time:.2f} seconds")
     print("Final board state:")
     print_board_state()
+    
+    # Get success rate over 10000 runs before finishing
+    print("\nCalculating success rate over 10000 runs...")
+    quick_attempts = 0
+    quick_successes = 0
+    quick_start = time.time()
+    
+    # Quick runs from corner position
+    for _ in range(10000):
+        if try_random_tour(0, 0):
+            quick_successes += 1
+        quick_attempts += 1
+    
+    print(f"Success Rate over {quick_attempts} runs: {(quick_successes/quick_attempts)*100:.2f}%")
+    print(f"Time taken: {time.time() - quick_start:.2f} seconds\n")
+    
     return None
