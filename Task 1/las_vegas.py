@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import time  # Need this to track how long we're taking
 
 def las_vegas(tour_type):
     """
@@ -26,6 +27,11 @@ def las_vegas(tour_type):
     # We need a separate board to track visited squares
     visited = np.zeros((8, 8), dtype=bool)
     
+    # Adding some counters to see what's happening
+    attempts = 0
+    successful_attempts = 0
+    start_time = time.time()
+    
     # We need a way to make sure the knight can't go outside of our board
     def is_possible_move(x, y):
         if 0 <= x < 8 and 0 <= y < 8:
@@ -45,4 +51,58 @@ def las_vegas(tour_type):
             print()  # New line after each row
         print()  # Extra line after board
 
+    def try_random_tour(start_x, start_y):
+        nonlocal attempts, successful_attempts, path, visited
+        attempts += 1
+        
+        # Reset for new attempt
+        path = [(start_x, start_y)]
+        visited.fill(False)
+        visited[start_x, start_y] = True
+        current_x, current_y = start_x, start_y
+        moves_made = 0
+        
+        # Keep making moves until we finish or fail
+        while moves_made < 63:
+            dx, dy = random.choice(knight_moves)
+            next_x, next_y = current_x + dx, current_y + dy
+            
+            # If we're off the board or hit visited square - that's a fail
+            if not is_possible_move(next_x, next_y):
+                continue  # Try another random move
+            if visited[next_x, next_y]:
+                return False  # Hit visited square - Las Vegas failure condition
+            
+            # Make the move
+            current_x, current_y = next_x, next_y
+            path.append((current_x, current_y))
+            visited[current_x, current_y] = True
+            moves_made += 1
+        
+        # If we're doing a closed tour, check if we can get back
+        if tour_type == "Closed":
+            for dx, dy in knight_moves:
+                final_x, final_y = current_x + dx, current_y + dy
+                if (final_x, final_y) == (start_x, start_y):
+                    path.append((start_x, start_y))
+                    successful_attempts += 1
+                    return True
+            return False
+        
+        successful_attempts += 1
+        return True
+
+    # Try from starting position (0,0) initially
+    while attempts < 1000000:  # Set a reasonable limit
+        if try_random_tour(0, 0):
+            elapsed = time.time() - start_time
+            print(f"\nFound a solution!")
+            print(f"Total attempts: {attempts:,}")
+            print(f"Success rate: {(successful_attempts/attempts)*100:.2f}%")
+            print(f"Time taken: {elapsed:.2f} seconds")
+            return path
+    
+    print(f"\nNo solution found")
+    print(f"Total attempts: {attempts:,}")
+    print(f"Success rate: {(successful_attempts/attempts)*100:.2f}%")
     return None
